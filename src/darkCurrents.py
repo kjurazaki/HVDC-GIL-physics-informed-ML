@@ -1,6 +1,14 @@
 from src.comsolComponent import ComsolComponent
 import os
 import pandas as pd
+from src.utils.transform import normalize_variables
+from src.linear_fits import (
+    PieceWiseFit,
+    LinearFit,
+    _wrapper_compute_fit,
+    piecewise_fit_currents,
+)
+import numpy as np
 
 
 class DarkCurrents(ComsolComponent):
@@ -9,6 +17,7 @@ class DarkCurrents(ComsolComponent):
     """
 
     def __init__(self, folder_path, files_names, retreat=False):
+        self.faraday = 96485.3321  # C / mol
         self.folder_path = folder_path
         self.retreat = retreat
 
@@ -77,6 +86,14 @@ class DarkCurrents(ComsolComponent):
         self.dataframes["dark_current"] = self.merge_dataframes(
             ["S", "Udc_kV", "Time_s"],
             self.list_merge_dataframes,
+        )
+        self.dataframes["dark_current"]["Time_s"] = self.dataframes["dark_current"][
+            "Time_s"
+        ].astype("int")
+        self.dataframes["dark_current"].sort_values(by="S", inplace=True)
+        # Normalize values
+        self.dataframes["dark_current"] = normalize_variables(
+            self.dataframes["dark_current"], ["S"], ["Current (A)", "Charge"]
         )
 
         # Save treated dataframes
@@ -247,3 +264,59 @@ class DarkCurrents(ComsolComponent):
             },
             inplace=True,
         )
+
+    def compute_charge(self):
+        """
+        Compute charge based on the concentration of ions
+        """
+        self.dataframes["dark_current"]["negative_charge"] = (
+            self.dataframes["dark_current"]["concentration_negative"] * self.faraday
+        )
+        self.dataframes["dark_current"]["positive_charge"] = (
+            self.dataframes["dark_current"]["concentration_positive"] * self.faraday
+        )
+
+    def compute_ion_generation_comsol(self):
+        """
+        Receives the darkcurrent dataframe and computes the ion generation and recombination
+        Doesn't insert in the darkcurrent dataframe as the ion_generation is repeated
+        """
+        df_ion = self.dataframes["dark_current"][
+            ["S", "ion_generation", "ion_recombination"]
+        ].drop_duplicates("S")
+        df_ion["charge_generation"] = df_ion["ion_generation"] * self.faraday
+        return df_ion
+
+
+def piecewise_analysis(df):
+    """
+    Analysis of the current vs voltage with a piece wise fit - identify the log-like curve
+    """
+    # Exponential increase of current with Udc - dependance on S?
+    df["Current (A)_log"] = np.log(df["Current (A)"])
+    piecewise_fit_currents(df, S=210000000, number_of_segments=2, plot=True)
+
+    fittings = df.groupby(["S"])[["S", "Current (A)_log", "Time_s", "Udc_kV"]].apply(
+        _wrapper_compute_fit
+    )
+    fittings = fittings.droplevel(level=0).reset_index(drop=True)
+    return fittings
+
+
+def saturation_current_analysis(df):
+    # Parameters studied
+    print(f"{df[['S', 'Udc_kV']].drop_duplicates()}")
+
+    # Linear regression of Current saturation vs ion-pair generation
+    linear_fit = LinearFit(
+        df.loc[
+            (df["Udc_kV"] == df["Udc_kV"].max()) & (df["Time_s"] == df["Time_s"].max()),
+            "S",
+        ],
+        df.loc[
+            (df["Udc_kV"] == df["Udc_kV"].max()) & (df["Time_s"] == df["Time_s"].max()),
+            "Current (A)",
+        ],
+    )
+    linear_fit.fit_model()
+    linear_fit.graph_fit()

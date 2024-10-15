@@ -3,6 +3,10 @@ import numpy as np
 
 
 def normalize_variables(df, category_cols, variable_cols):
+    """
+    Normalize the variables in the dataframe
+    """
+
     def normalize(group):
         return (group - group.min()) / (group.max() - group.min())
 

@@ -1,6 +1,9 @@
 def compute_s_value(
     phi, pressure, temperature, gas_molar_mass, gas_constant=8.314, w_ev=34
 ):
+    """
+    Compute the S alue based on Lopes and Lucchini's paper
+    """
     # Constants
     e = 1.602e-19  # Elementary charge in Coulombs
     w_joules = w_ev * e  # Convert eV to Joules

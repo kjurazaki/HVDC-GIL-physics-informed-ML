@@ -5,35 +5,9 @@ import math
 from src.comsolComponent import ComsolComponent
 from src.darkCurrents import DarkCurrents
 from src.utils.plotting import FlexiblePlotter, InteractivePlot
-from src.utils.transform import normalize_variables, compute_t90  # {{ edit_2 }}
-from src.linear_fits import (
-    PieceWiseFit,
-    LinearFit,
-    _wrapper_compute_fit,
-    piecewise_fit_currents,
-)
-
-
-def load_cylindrical_comsol_parameters():
-    """
-    Data related to the study [[dark_currents_TDS]], check obsidian for more context
-    """
-    # Volume of the gas chamber computed on COMSOL m^3
-    volume_of_chamber = 0.024946
-    # Area of the electrodes that the gas ions are integrated m^2
-    area_dark_currents = 0.46954
-    # Area of the interface [m^2]
-    area_interface_insulator_gas = 0.045247
-    # length interface [m]
-    length_interface = 0.15129
-    # Area of the insulated wall [m^2]
-    area_insulated_wall = 0.090478
-    # Length insulated wall [m]
-    length_insulated_wall = 0.12
-    # Elementary charge C
-    e = 1.602176634e-19
-    # Relation of saturation levels and S
-    L_char = 1.86088545e-21 / e / area_dark_currents
+from src.utils.transform import normalize_variables, compute_t90
+from src.cylindrical_insulator import load_cylindrical_comsol_parameters
+import seaborn as sns
 
 
 def main():
@@ -53,46 +27,69 @@ def main():
     data = DarkCurrents(
         folder_path, files_names, retreat=False
     )  # Use retreat true if any changes in the files
-    df = data.dataframes["dark_current"]
-    df["Time_s"] = df["Time_s"].astype("int")
-    df.sort_values(by="S", inplace=True)
+    df = data.dataframes["surface_charge_density"]
 
-    # Normalize values
-    df = normalize_variables(df, ["S"], ["Current (A)", "Charge"])
-
-    # Parameters studied
-    print(f"{df[['S', 'Udc_kV']].drop_duplicates()}")
-
-    # Ion generation charge
-    faraday = 96485.3321  # C / mol
-    df_ion = df[["S", "ion_generation", "ion_recombination"]].drop_duplicates("S")
-    df_ion["charge_generation"] = df_ion["ion_generation"] * faraday
-
-    df["negative_charge"] = df["concentration_negative"] * faraday
-    df["positive_charge"] = df["concentration_positive"] * faraday
-
-    # Exponential increse of current with Udc - dependance on S?
-    df["Current (A)_log"] = np.log(df["Current (A)"])
-    piecewise_fit_currents(df, S=210000000, number_of_segments=2, plot=True)
-
-    fittings = df.groupby(["S"])[["S", "Current (A)_log", "Time_s", "Udc_kV"]].apply(
-        _wrapper_compute_fit
+    df_grouped = (
+        df.groupby(["S", "Udc_kV", "Time_s"])["surface_charge_density"]
+        .agg(
+            [
+                ("mean", "mean"),
+                ("median", "median"),
+                ("min", "min"),
+                ("max", "max"),
+                ("abs_sum", lambda x: x.abs().sum()),
+                ("list_values", lambda x: list(x)),
+            ]
+        )
+        .reset_index()
     )
-    fittings = fittings.droplevel(level=0).reset_index(drop=True)
+    df_plot = df_grouped[
+        (df_grouped["S"] == 2900000)
+        & (df_grouped["Udc_kV"] == 335)
+        & (df_grouped["Time_s"] > 0)
+    ]
+    fig, axs = plt.subplots(2, 3, figsize=(10, 8))
 
-    # Linear regression of Current saturation vs ion-pair generation
-    linear_fit = LinearFit(
-        df.loc[
-            (df["Udc_kV"] == df["Udc_kV"].max()) & (df["Time_s"] == df["Time_s"].max()),
-            "S",
-        ],
-        df.loc[
-            (df["Udc_kV"] == df["Udc_kV"].max()) & (df["Time_s"] == df["Time_s"].max()),
-            "Current (A)",
-        ],
+    axs[0, 0].scatter(df_plot["Time_s"], df_plot["mean"], label="mean", c="blue")
+    axs[0, 0].set_title("Mean")
+    axs[0, 0].legend()
+
+    axs[0, 1].scatter(df_plot["Time_s"], df_plot["median"], label="median", c="red")
+    axs[0, 1].set_title("Median")
+    axs[0, 1].legend()
+
+    axs[0, 2].scatter(df_plot["Time_s"], df_plot["max"], label="max", c="green")
+    axs[0, 2].set_title("Max")
+    axs[0, 2].legend()
+
+    axs[1, 0].scatter(df_plot["Time_s"], df_plot["min"], label="min", c="orange")
+    axs[1, 0].set_title("Min")
+    axs[1, 0].legend()
+
+    axs[1, 1].scatter(
+        df_plot["Time_s"], df_plot["abs_sum"], label="abs sum", c="purple"
     )
-    linear_fit.fit_model()
-    linear_fit.graph_fit()
+    axs[1, 1].set_title("Absolute Sum")
+    axs[1, 1].legend()
+
+    for ax in axs.flat:
+        ax.set(xlabel="Time_s", ylabel="Value")
+
+    plt.tight_layout()
+    plt.show()
+
+    # Add violin plot for each Time_s of the surface_charge_density
+    # Sample df_plot in uniform timesteps, so the graph has only 10 points of Time_s
+    df_plot = df_plot.iloc[:: max(1, len(df_plot) // 10)]
+    fig, ax = plt.subplots(figsize=(10, 6))
+    sns.violinplot(
+        data=df_plot.explode("list_values"), x="Time_s", y="list_values", ax=ax
+    )
+    plt.title("Violin Plot")
+    plt.xlabel("Time_s")
+    plt.ylabel("Surface Charge Density")
+    plt.show()
+    print(df_grouped)
 
 
 if __name__ == "__main__":

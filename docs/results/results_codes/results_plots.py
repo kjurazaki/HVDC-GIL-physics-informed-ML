@@ -5,6 +5,14 @@ import numpy as np
 
 def plotterly(df, data):
     # ----
+    # Understanding mean, median, min and max of surface charge density
+    df_plot = df_grouped[(df_grouped["Time_s"] > 0)]
+
+    plotterly = InteractivePlot(df_plot, "Time_s", "min", "Udc_kV", ["S"])
+    fig = plotterly.create_plot()
+    fig.show()
+
+    # ----
 
     # Relation of dark currents and S and Udc
     df = data.dataframes["dark_current"]
