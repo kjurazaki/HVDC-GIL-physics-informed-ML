@@ -6,6 +6,7 @@ import plotly.express as px
 import plotly.graph_objs as go
 import random
 from itertools import cycle
+from sympy import Number, sympify
 
 
 def plot_distribution(df, x, y, xlabel, ylabel, title):
@@ -75,13 +76,23 @@ class FlexiblePlotter:
     ):
         if ax is not None:
             self.ax = ax
-        sns.scatterplot(
-            data=self.df,
-            x=x_col,
-            y=y_col,
-            color=color,
-            ax=self.ax,
-        )
+        if category_cols:
+            sns.scatterplot(
+                data=self.df,
+                x=x_col,
+                y=y_col,
+                hue=category_cols[0],
+                style=category_cols[1] if len(category_cols) > 1 else None,
+                ax=self.ax,
+            )
+        else:
+            sns.scatterplot(
+                data=self.df,
+                x=x_col,
+                y=y_col,
+                color=color,
+                ax=self.ax,
+            )
         self.ax.set_xlabel(x_col)
         self.ax.set_ylabel(y_col)
         self.ax.set_label(label)
@@ -92,15 +103,25 @@ class FlexiblePlotter:
     ):
         if ax is not None:
             self.ax = ax
-        category_1 = category_cols[1] if len(category_cols) > 1 else category_cols[0]
-        sns.scatterplot(
-            data=self.df,
-            x=x_col,
-            y=y_col,
-            hue=category_cols[0],
-            style=category_1,
-            ax=self.ax,
-        )
+        if category_cols:
+            category_1 = (
+                category_cols[1] if len(category_cols) > 1 else category_cols[0]
+            )
+            sns.scatterplot(
+                data=self.df,
+                x=x_col,
+                y=y_col,
+                hue=category_cols[0],
+                style=category_1,
+                ax=self.ax,
+            )
+        else:
+            sns.scatterplot(
+                data=self.df,
+                x=x_col,
+                y=y_col,
+                ax=self.ax,
+            )
         self.ax.set_xlabel(x_col)
         self.ax.set_ylabel(y_col)
         self.ax.set_yscale(y_scale)
@@ -175,44 +196,55 @@ class InteractivePlot:
         unique_times = self.df[self.time_col].unique()
         initial_time = unique_times[0]
 
-        # Determine the second category column for styling, if provided
-        category_1 = (
-            self.category_cols[1]
-            if len(self.category_cols) > 1
-            else self.category_cols[0]
-        )
+        if self.category_cols:
+            # Determine the second category column for styling, if provided
+            category_1 = (
+                self.category_cols[1]
+                if len(self.category_cols) > 1
+                else self.category_cols[0]
+            )
 
-        # Create tuples of the combined categories for random style assignment
-        combined_categories = list(
-            self.df.sort_values(by=list(set([self.category_cols[0], category_1])))[
-                [self.category_cols[0], category_1]
-            ]
-            .drop_duplicates()
-            .itertuples(index=False, name=None)
-        )
+            # Create tuples of the combined categories for random style assignment
+            combined_categories = list(
+                self.df.sort_values(by=list(set([self.category_cols[0], category_1])))[
+                    [self.category_cols[0], category_1]
+                ]
+                .drop_duplicates()
+                .itertuples(index=False, name=None)
+            )
 
-        # Assign random styles to the unique category combinations
-        self.assign_random_styles(combined_categories)
+            # Assign random styles to the unique category combinations
+            self.assign_random_styles(combined_categories)
+        else:
+            combined_categories = [(None, None)]
 
         # Initialize figure
         fig = go.Figure()
 
         # Create a trace for each category combination with initial data
         for cat_comb in combined_categories:
-            cat1, cat2 = cat_comb
-            df_filtered = self.df[
-                (self.df[self.time_col] == initial_time)
-                & (self.df[self.category_cols[0]] == cat1)
-                & (self.df[category_1] == cat2)
-            ]
+            if self.category_cols:
+                cat1, cat2 = cat_comb
+                df_filtered = self.df[
+                    (self.df[self.time_col] == initial_time)
+                    & (self.df[self.category_cols[0]] == cat1)
+                    & (self.df[category_1] == cat2)
+                ]
+                marker_style = dict(
+                    symbol=self.style_map[cat_comb], color=self.color_map[cat_comb]
+                )
+                name = f"{cat1}, {cat2}"
+            else:
+                df_filtered = self.df[self.df[self.time_col] == initial_time]
+                marker_style = dict()
+                name = "Data"
+
             trace = go.Scatter(
                 x=df_filtered[self.x_col],
                 y=df_filtered[self.y_col],
                 mode="markers",
-                marker=dict(
-                    symbol=self.style_map[cat_comb], color=self.color_map[cat_comb]
-                ),
-                name=f"{cat1}, {cat2}",
+                marker=marker_style,
+                name=name,
             )
             fig.add_trace(trace)
 
@@ -230,12 +262,16 @@ class InteractivePlot:
                 label=str(time_point),
             )
             for j, cat_comb in enumerate(combined_categories):
-                cat1, cat2 = cat_comb
-                df_filtered = self.df[
-                    (self.df[self.time_col] == time_point)
-                    & (self.df[self.category_cols[0]] == cat1)
-                    & (self.df[category_1] == cat2)
-                ]
+                if self.category_cols:
+                    cat1, cat2 = cat_comb
+                    df_filtered = self.df[
+                        (self.df[self.time_col] == time_point)
+                        & (self.df[self.category_cols[0]] == cat1)
+                        & (self.df[category_1] == cat2)
+                    ]
+                else:
+                    df_filtered = self.df[self.df[self.time_col] == time_point]
+
                 step["args"][0]["x"].append(df_filtered[self.x_col])
                 step["args"][0]["y"].append(df_filtered[self.y_col])
             steps.append(step)
@@ -256,7 +292,11 @@ class InteractivePlot:
             xaxis_title=self.x_col,
             yaxis_title=self.y_col,
             title=f"{self.y_col} vs {self.x_col} over {self.time_col}",
-            legend_title=f"{self.category_cols[0]} & {category_1}",
+            legend_title=(
+                f"{self.category_cols[0]} & {category_1}"
+                if self.category_cols
+                else "Data"
+            ),
             # Format x-axis to show whole numbers
             xaxis=dict(tickformat=",d", title=self.x_col),  # Format as integer
             # Format y-axis to use scientific notation
@@ -378,3 +418,15 @@ def parallel_plot_darkcurrents(df, plotterly):
         parallel_columns=parallel_cols, short_labels=short_labels
     )
     fig.show()
+
+
+def round_expr(expr):
+    """
+    Round coefficients in the expression to a certain number of digits
+    """
+    return expr.xreplace(
+        {
+            n: sympify("{:.2e}".format(float(n)) if abs(n) > 10 else n)
+            for n in expr.atoms(Number)
+        }
+    )

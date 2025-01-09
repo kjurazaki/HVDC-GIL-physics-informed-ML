@@ -1,0 +1,25 @@
+{
+  "target": "steady_state_time_max_up",
+  "features": [
+    "Udc_kV",
+    "ion_pair_rate",
+    "surface_Ez_up_mean_es",
+    "surface_Er_up_mean_es",
+    "surface_Ez_up_max_es",
+    "surface_Er_up_max_es",
+    "surface_Ez_up_min_es",
+    "surface_Er_up_min_es"
+  ],
+  "_features": [
+    "electric_field_norm_avg_es",
+    "electric_field_z_avg_es",
+    "electric_field_r_avg_es",
+    "surface_Ez_down_median_es",
+    "surface_Ez_up_median_es",
+    "surface_Er_down_median_es",
+    "surface_Er_up_median_es",
+    "HV_Er_median_es",
+    "Grd_Er_median_es",
+    "Grd_Ez_median_es"
+  ]
+}

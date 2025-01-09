@@ -1,0 +1,42 @@
+{
+  "_comment_file": " # Results from the conical insulator",
+  "folder_path": "C:/Users/kenji/OneDrive/2024/Research DII006/sindy_conical_ML/database_comsol_ml/",
+  "_comment_volumetric_tds_e_current": "Gas volume",
+  "_comment_surface_charge_density_up_min_max": "It is ok to name as _min_max or without it, code it is already general",
+  "_comment_max_electric_field": "Minimum doesn't make sense as always is 0. Don't need this dataframe as surface_Ez_up_min_max and others are sufficient databases : ['_anode', '_cathode', '_downinterface', '_upinterface']",
+  "_comment_HV_Ez_min_max": "Not used as it is 0",
+  "list_merge_dataframes": [
+    "dark_current",
+    "dark_currents_hv",
+    "dark_currents_sld_hv",
+    "dark_currents_sld_grd",
+    "volumetric_charge",
+    "tds_stats",
+    "E_current_avg",
+    "E_current_min",
+    "E_current_max",
+    "surface_charge_density_up_min_max",
+    "surface_electric_potential_up_min_max",
+    "surface_charge_density_down_min_max",
+    "surface_electric_potential_down_min_max",
+    "surface_Ez_up_min_max",
+    "surface_Ez_down_min_max",
+    "surface_Er_up_min_max",
+    "surface_Er_down_min_max",
+    "HV_Er_min_max",
+    "Grd_Er_min_max",
+    "Grd_Ez_min_max"
+  ],
+  "list_merge_1D_dataframes": {
+    "down": ["surface_Ez_down", "surface_Er_down"],
+    "up": ["surface_Ez_up", "surface_Er_up"]
+  },
+  "save_paths": {
+    "surface_charge_density_down": "C:/Users/kenji/OneDrive/2024/Research DII006/sindy_conical_ML/database_comsol_ml/Processed/surface_charge_density_down.parquet",
+    "surface_charge_density_up": "C:/Users/kenji/OneDrive/2024/Research DII006/sindy_conical_ML/database_comsol_ml/Processed/surface_charge_density_up.parquet",
+    "_comment_gas_current_JGr_steady": "This dataframe has the z-compnent as well",
+    "gas_current_JGr_steady": "C:/Users/kenji/OneDrive/2024/Research DII006/sindy_conical_ML/database_comsol_ml/Processed/surface_2D_steady.parquet"
+  },
+  "retreat": true,
+  "save": true
+}

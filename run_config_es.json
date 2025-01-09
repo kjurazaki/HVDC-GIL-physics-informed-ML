@@ -1,0 +1,28 @@
+{
+  "_comment_file": " # Results from the conical insulator",
+  "folder_path": "C:/Users/kenji/OneDrive/2024/Research DII006/sindy_conical_ML/database_comsol_ml/",
+  "_comment_e_current": "Gas volume",
+  "_comment_max_electric_field": "Minimum doesn't make sense as always is 0. Don't need this dataframe as surface_Ez_up_min_max and others are sufficient, dataframes: ['_anode', '_cathode', '_downinterface', '_upinterface']",
+  "_comment_HV_Ez": "Not used as it is 0",
+  "list_merge_dataframes": [
+    "E_current_avg",
+    "E_current_min",
+    "E_current_max",
+    "surface_Ez_up",
+    "surface_Ez_down",
+    "surface_Er_up",
+    "surface_Er_down",
+    "HV_Er",
+    "Grd_Er",
+    "Grd_Ez"
+  ],
+  "list_merge_1D_dataframes": {
+    "down": ["surface_Ez_down", "surface_Er_down"],
+    "up": ["surface_Ez_up", "surface_Er_up"]
+  },
+  "save_paths": {
+    "dark_current": "C:/Users/kenji/OneDrive/2024/Research DII006/sindy_conical_ML/database_comsol_ml/Processed/dark_currents_es.parquet"
+  },
+  "retreat": true,
+  "save": true
+}

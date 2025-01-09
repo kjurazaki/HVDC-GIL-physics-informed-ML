@@ -1,0 +1,24 @@
+\usepackage{breqn}
+\usepackage{booktabs}
+
+...
+
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{p{0.5\linewidth}ccc}
+\toprule
+Equation & Complexity & Loss & Score \\
+\midrule
+\raggedright $1.65$ & $1$ & $0.807$ & $0.0$ \\
+\raggedright $0.00636 V$ & $3$ & $8.99 \cdot 10^{-6}$ & $5.70$ \\
+\raggedright $0.00636 V$ & $4$ & $8.99 \cdot 10^{-6}$ & $4.45 \cdot 10^{-7}$ \\
+\raggedright $0.00635 \left(V + 0.560\right)$ & $5$ & $6.10 \cdot 10^{-6}$ & $0.388$ \\
+\raggedright $0.00635 V + S 4.23 \cdot 10^{-11}$ & $7$ & $5.65 \cdot 10^{-8}$ & $2.34$ \\
+\raggedright $0.00635 V + S 0.00371 \cdot 1.17 \cdot 10^{-8}$ & $9$ & $5.19 \cdot 10^{-8}$ & $0.0417$ \\
+\raggedright $0.00635 V + \left(S + \frac{S}{V}\right) 4.23 \cdot 10^{-11}$ & $11$ & $3.22 \cdot 10^{-8}$ & $0.239$ \\
+\raggedright $V 0.00635 + S e^{\frac{1.65}{V}} 4.23 \cdot 10^{-11}$ & $12$ & $2.04 \cdot 10^{-8}$ & $0.454$ \\
+\raggedright $V 0.00635 + S 4.23 \cdot 10^{-11} e^{\frac{e^{0.990}}{V}}$ & $13$ & $1.26 \cdot 10^{-8}$ & $0.487$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}

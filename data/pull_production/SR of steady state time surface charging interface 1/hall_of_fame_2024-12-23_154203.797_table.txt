@@ -1,0 +1,28 @@
+\usepackage{breqn}
+\usepackage{booktabs}
+
+...
+
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{@{}cccc@{}}
+\toprule
+Equation & Complexity & Loss & Score \\
+\midrule
+$y = 3.44 \cdot 10^{3}$ & $1$ & $1.55 \cdot 10^{4}$ & $0.0$ \\
+\begin{minipage}{0.8\linewidth} \vspace{-1em} \begin{dmath*} y = \log{\left(surface_{Ez up max es} \right)} + 3.43 \cdot 10^{3} \end{dmath*} \end{minipage} & $4$ & $1.54 \cdot 10^{4}$ & $0.00205$ \\
+$y = V^{0.850} + 3.33 \cdot 10^{3}$ & $5$ & $1.22 \cdot 10^{4}$ & $0.233$ \\
+\begin{minipage}{0.8\linewidth} \vspace{-1em} \begin{dmath*} y = surface_{Ez up mean es}^{S^{-0.0493}} + 3.28 \cdot 10^{3} \end{dmath*} \end{minipage} & $7$ & $1.06 \cdot 10^{4}$ & $0.0714$ \\
+\begin{minipage}{0.8\linewidth} \vspace{-1em} \begin{dmath*} y = \frac{V + 6.06 \cdot 10^{3}}{\log{\left(\log{\left(S \right)} \right)}} + 1.24 \cdot 10^{3} \end{dmath*} \end{minipage} & $9$ & $1.04 \cdot 10^{4}$ & $0.00659$ \\
+\begin{minipage}{0.8\linewidth} \vspace{-1em} \begin{dmath*} y = \frac{6.76 \left(V + 1.73 \cdot 10^{3}\right)}{\log{\left(S \right)}} + 2.68 \cdot 10^{3} \end{dmath*} \end{minipage} & $10$ & $1.04 \cdot 10^{4}$ & $0.00183$ \\
+\begin{minipage}{0.8\linewidth} \vspace{-1em} \begin{dmath*} y = \frac{surface_{Er up max es}}{\left(V^{3.03} + S\right)^{0.529}} + 3.28 \cdot 10^{3} \end{dmath*} \end{minipage} & $11$ & $9.34 \cdot 10^{3}$ & $0.110$ \\
+\begin{minipage}{0.8\linewidth} \vspace{-1em} \begin{dmath*} y = \frac{surface_{Er up max es}}{\left(S + surface_{Ez up mean es} \left(V - 120.\right)\right)^{0.522}} + 3.27 \cdot 10^{3} \end{dmath*} \end{minipage} & $13$ & $9.24 \cdot 10^{3}$ & $0.00549$ \\
+\begin{minipage}{0.8\linewidth} \vspace{-1em} \begin{dmath*} y = \frac{electric_{field r avg es}}{\left(V^{3.08} + S\right)^{0.474}} + 3.19 \cdot 10^{3} + \frac{2.68 \cdot 10^{3}}{V} \end{dmath*} \end{minipage} & $15$ & $8.63 \cdot 10^{3}$ & $0.0338$ \\
+\begin{minipage}{0.8\linewidth} \vspace{-1em} \begin{dmath*} y = \frac{electric_{field norm avg es}}{\left(V^{3.08} + S\right)^{0.474}} + \frac{S}{3.39 surface_{Er up max es}} + 3.19 \cdot 10^{3} \end{dmath*} \end{minipage} & $17$ & $8.09 \cdot 10^{3}$ & $0.0323$ \\
+\begin{minipage}{0.8\linewidth} \vspace{-1em} \begin{dmath*} y = \frac{electric_{field norm avg es}}{\left(V^{3.08} + S\right)^{0.474}} + \frac{S}{surface_{Er up max es} e^{1.21}} + 3.19 \cdot 10^{3} \end{dmath*} \end{minipage} & $18$ & $8.09 \cdot 10^{3}$ & $3.10 \cdot 10^{-5}$ \\
+\begin{minipage}{0.8\linewidth} \vspace{-1em} \begin{dmath*} y = \frac{electric_{field r avg es}}{\left(V^{3.08} + S 0.856\right)^{0.475}} + \frac{S}{3.39 surface_{Er up max es}} + 3.19 \cdot 10^{3} \end{dmath*} \end{minipage} & $19$ & $8.04 \cdot 10^{3}$ & $0.00680$ \\
+\begin{minipage}{0.8\linewidth} \vspace{-1em} \begin{dmath*} y = \frac{electric_{field r avg es}}{\left(S + surface_{Ez up mean es} \left(V - 120.\right)\right)^{0.474}} + \frac{S}{surface_{Er up max es} e^{1.21}} + 3.19 \cdot 10^{3} \end{dmath*} \end{minipage} & $20$ & $7.95 \cdot 10^{3}$ & $0.0109$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}

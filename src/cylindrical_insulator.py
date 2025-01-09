@@ -16,6 +16,8 @@ def load_cylindrical_comsol_parameters():
     length_insulated_wall = 0.12
     # Elementary charge C
     e = 1.602176634e-19
+    # Faraday constant C/mol
+    faraday = 96485.3321233100184
     # Relation of saturation levels and S
     L_char = 1.86088545e-21 / e / area_dark_currents
 

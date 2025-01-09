@@ -1,0 +1,24 @@
+\usepackage{breqn}
+\usepackage{booktabs}
+
+...
+
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{@{}cccc@{}}
+\toprule
+Equation & Complexity & Loss & Score \\
+\midrule
+$-1.77$ & $1$ & $1.48 \cdot 10^{3}$ & $0.0$ \\
+$-7.82$ & $2$ & $1.06 \cdot 10^{3}$ & $0.341$ \\
+$-20.4 - 19.9$ & $3$ & $1.66$ & $6.46$ \\
+$- \log{\left(Er \right)} - 27.2$ & $4$ & $0.958$ & $0.549$ \\
+$\log{\left(\frac{S}{Er} \right)} - 45.4$ & $6$ & $0.276$ & $0.622$ \\
+$\log{\left(0.538 + \frac{S}{Er} \right)} - 45.4$ & $8$ & $0.276$ & $0.000219$ \\
+$4.63 \cdot 10^{-8} Er + \log{\left(\frac{S}{Er} \right)} - 45.4$ & $10$ & $0.275$ & $0.00218$ \\
+$4.63 \cdot 10^{-8} Er + \log{\left(-0.205 + \frac{S}{Er} \right)} - 45.4$ & $12$ & $0.275$ & $4.70 \cdot 10^{-5}$ \\
+$4.63 \cdot 10^{-8} Er + \log{\left(4.63 \cdot 10^{-8} Er + \frac{S}{Er} \right)} - 45.4$ & $14$ & $0.275$ & $8.29 \cdot 10^{-5}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}

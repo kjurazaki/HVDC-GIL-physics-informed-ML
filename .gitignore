@@ -1,1 +1,6 @@
 __pycache__
+data/processed/
+output_data/
+debug_tests/
+src/utils/connect_AwsS3Bucket.py
+docs/
