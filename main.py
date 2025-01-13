@@ -38,9 +38,6 @@ with open("sr_regression_config.json", "r") as file:
 with open("sindy_config.json", "r") as file:
     sindy_config = json.load(file)
 
-with open("config.json", "r") as file:
-    config = json.load(file)
-
 
 def main():
     parser = argparse.ArgumentParser(description="Run different tasks for the project.")

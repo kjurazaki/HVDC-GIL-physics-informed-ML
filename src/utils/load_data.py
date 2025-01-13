@@ -5,14 +5,16 @@ import numpy as np
 
 
 # Load train data for SINDy - surface charge density
-def load_train_data(dataset, S=None, voltage=None, modifier=""):
+def load_train_data(
+    dataset, S=None, voltage=None, modifier="", folder_path="Folder not defined"
+):
     train_data = {
-        "dark_currents": f"C:/Users/kenji/OneDrive/2024/Research DII006/sindy_conical_ML/database_comsol_ml/Processed{modifier}/dark_currents{modifier}.parquet",
-        "dark_currents_es_solution": f"C:/Users/kenji/OneDrive/2024/Research DII006/sindy_conical_ML/database_comsol_ml/Processed{modifier}/dark_currents_es_solution.parquet",
-        "surface_charge_density_down": f"C:/Users/kenji/OneDrive/2024/Research DII006/sindy_conical_ML/database_comsol_ml/Processed{modifier}/surface_charge_density_down{modifier}_{S}S_{voltage}V.parquet",
-        "surface_charge_density_up": f"C:/Users/kenji/OneDrive/2024/Research DII006/sindy_conical_ML/database_comsol_ml/Processed{modifier}/surface_charge_density_up{modifier}_{S}S_{voltage}V.parquet",
-        "gas_current_JGr_steady": f"C:/Users/kenji/OneDrive/2024/Research DII006/sindy_conical_ML/database_comsol_ml/Processed{modifier}/surface_2D_steady{modifier}_{S}S_{voltage}V.parquet",
-        "surface_2D_steady_all": f"C:/Users/kenji/OneDrive/2024/Research DII006/sindy_conical_ML/database_comsol_ml/Processed{modifier}/surface_2D_steady{modifier}_all.parquet",
+        "dark_currents": f"{folder_path}Processed{modifier}/dark_currents{modifier}.parquet",
+        "dark_currents_es_solution": f"{folder_path}Processed{modifier}/dark_currents_es_solution.parquet",
+        "surface_charge_density_down": f"{folder_path}Processed{modifier}/surface_charge_density_down{modifier}_{S}S_{voltage}V.parquet",
+        "surface_charge_density_up": f"{folder_path}Processed{modifier}/surface_charge_density_up{modifier}_{S}S_{voltage}V.parquet",
+        "gas_current_JGr_steady": f"{folder_path}Processed{modifier}/surface_2D_steady{modifier}_{S}S_{voltage}V.parquet",
+        "surface_2D_steady_all": f"{folder_path}Processed{modifier}/surface_2D_steady{modifier}_all.parquet",
     }
     print(f"loading from: {train_data[dataset]}")
     df = pd.read_parquet(train_data[dataset])
@@ -24,7 +26,7 @@ def load_data_surface_all(
     step_size=10,
     columns_to_read=None,
     steadyState=False,
-    folder_path="C:/Users/kenji/OneDrive/2024/Research DII006/sindy_conical_ML/database_comsol_ml/",
+    folder_path="Folder not defined",
     modifier="",
 ):
     """

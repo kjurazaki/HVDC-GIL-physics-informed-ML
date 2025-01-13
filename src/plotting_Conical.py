@@ -6,12 +6,14 @@ import seaborn as sns
 import pandas as pd
 
 
-def load_plot_data_sr(save_path, modifier=""):
+def load_plot_data_sr(save_path, modifier="", folder_path="Folder not defined"):
     """
     Plot targets data of the learning task of SR
     """
     ## Load data for SR
-    df_dark_currents = load_train_data("dark_currents", modifier=modifier)
+    df_dark_currents = load_train_data(
+        "dark_currents", modifier=modifier, folder_path=folder_path
+    )
     df_dark_currents["Current (A) Total"] = (
         df_dark_currents["Current (A)"]
         + df_dark_currents["Current (A) HV"]
@@ -86,7 +88,9 @@ def load_plot_data_sr(save_path, modifier=""):
         )
 
 
-def load_plot_data_surface(save_path: str, modifier=""):
+def load_plot_data_surface(
+    save_path: str, modifier="", folder_path="Folder not defined"
+):
     """
     Load and plot surface data
     """
@@ -99,6 +103,7 @@ def load_plot_data_surface(save_path: str, modifier=""):
         step_size=step_size,
         columns_to_read=columns_to_read,
         modifier=modifier,
+        folder_path=folder_path,
     )
     df_surface = transformation_surface_data(
         df_surface, f"surface_charge_density_{interface}"
@@ -111,6 +116,7 @@ def load_plot_data_surface(save_path: str, modifier=""):
         columns_to_read=None,
         steadyState=True,
         modifier=modifier,
+        folder_path=folder_path,
     )
     df_surface_steadyState["steady_state_time"] = (
         df_surface_steadyState["steady_state_time"] / 3600

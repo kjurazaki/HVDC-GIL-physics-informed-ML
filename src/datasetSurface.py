@@ -4,7 +4,7 @@ from src.conicalInsulator import insert_parameters, SteadyState
 import pickle
 
 
-def load_all_S_Udc(dataset, modifier=""):
+def load_all_S_Udc(dataset, modifier="", folder_path="Folder not defined"):
     """
     Load the surface charge density datasets
     """
@@ -25,7 +25,9 @@ def load_all_S_Udc(dataset, modifier=""):
     list_df_all = []
     for S in list_S:
         for Udc_kV in list_Udc:
-            df = load_train_data(dataset, S=S, voltage=Udc_kV, modifier=modifier)
+            df = load_train_data(
+                dataset, S=S, voltage=Udc_kV, modifier=modifier, folder_path=folder_path
+            )
             df[["S", "Udc_kV"]] = S, Udc_kV
             list_df_all.append(df)
 
@@ -35,7 +37,7 @@ def load_all_S_Udc(dataset, modifier=""):
     return df_all
 
 
-def steadyState_all_S_Udc(dataset, modifier=""):
+def steadyState_all_S_Udc(dataset, modifier="", folder_path="Folder not defined"):
     """
     Load the surface charge density datasets
     """
@@ -49,7 +51,9 @@ def steadyState_all_S_Udc(dataset, modifier=""):
     list_df_all = []
     for S in list_S:
         for Udc_kV in list_Udc:
-            df = load_train_data(dataset, S=S, voltage=Udc_kV, modifier=modifier)
+            df = load_train_data(
+                dataset, S=S, voltage=Udc_kV, modifier=modifier, folder_path=folder_path
+            )
             steady_state = SteadyState(df, "Time_s", dataset, ["Arc"])
             steady_state.get_steady_state_times()
             df_steady_state = pd.DataFrame.from_dict(steady_state.steady_state_bygroup)
@@ -61,37 +65,46 @@ def steadyState_all_S_Udc(dataset, modifier=""):
     return df_steady_state_all
 
 
-def steadyState_data_surface(interface="up", modifier=""):
+def steadyState_data_surface(
+    interface="up", modifier="", folder_path="Folder not defined"
+):
     """
     Concatenate all datasets of varying S and Udc
     """
     if interface == "up":
-        df_surface = steadyState_all_S_Udc("surface_charge_density_up", modifier)
+        df_surface = steadyState_all_S_Udc(
+            "surface_charge_density_up", modifier, folder_path=folder_path
+        )
     elif interface == "down":
-        df_surface = steadyState_all_S_Udc("surface_charge_density_down", modifier)
-
+        df_surface = steadyState_all_S_Udc(
+            "surface_charge_density_down", modifier, folder_path=folder_path
+        )
     df_surface.to_parquet(
-        f"C:/Users/kenji/OneDrive/2024/Research DII006/sindy_conical_ML/database_comsol_ml/Processed{modifier}/df_surface_{interface}{modifier}_steadyState.parquet",
+        f"{folder_path}Processed{modifier}/df_surface_{interface}{modifier}_steadyState.parquet",
         index=False,
     )
 
 
-def treat_data_surface(interface="up", modifier=""):
+def treat_data_surface(interface="up", modifier="", folder_path="Folder not defined"):
     """
     Concatenate all datasets of varying S and Udc
     """
     if interface == "up":
-        df_surface = load_all_S_Udc("surface_charge_density_up", modifier)
+        df_surface = load_all_S_Udc(
+            "surface_charge_density_up", modifier, folder_path=folder_path
+        )
         name_dataset = "surface_charge_density_up"
     elif interface == "down":
-        df_surface = load_all_S_Udc("surface_charge_density_down", modifier)
+        df_surface = load_all_S_Udc(
+            "surface_charge_density_down", modifier, folder_path=folder_path
+        )
         name_dataset = "surface_charge_density_down"
     elif interface == "2D":
-        df_surface = load_all_S_Udc("gas_current_JGr_steady")
+        df_surface = load_all_S_Udc("gas_current_JGr_steady", folder_path=folder_path)
         name_dataset = "surface_2D_steady"
 
     df_surface.to_parquet(
-        f"C:/Users/kenji/OneDrive/2024/Research DII006/sindy_conical_ML/database_comsol_ml/Processed{modifier}/{name_dataset}{modifier}_all.parquet",
+        f"{folder_path}Processed{modifier}/{name_dataset}{modifier}_all.parquet",
         index=False,
     )
 
