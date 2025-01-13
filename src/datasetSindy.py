@@ -116,6 +116,7 @@ def transform_final_sindy(
     step_size: int,
     scaling: bool = False,
     modifier: str = "",
+    folder_path="Folder not defined",
 ):
     """
     Transform the final sindy data
@@ -124,7 +125,10 @@ def transform_final_sindy(
     - step_size: resamples the data in "Arc" dimension
     """
     df_surface = load_data_surface_all(
-        interface=interface, step_size=step_size, modifier=modifier
+        interface=interface,
+        step_size=step_size,
+        modifier=modifier,
+        folder_path=folder_path,
     )
     df_surface = transformation_surface_data(
         df_surface, f"surface_charge_density_{interface}"
@@ -191,7 +195,11 @@ def normalize_columns_l2(x, xdot):
 
 
 def sindy_data(
-    interface: str, step_size: int, scaling: bool = False, modifier: str = ""
+    interface: str,
+    step_size: int,
+    scaling: bool = False,
+    modifier: str = "",
+    folder_path: str = "Folder not defined",
 ) -> None:
     """
     Run data treatment for SINDy
@@ -216,4 +224,5 @@ def sindy_data(
         step_size=step_size,
         scaling=scaling,
         modifier=modifier,
+        folder_path=folder_path,
     )

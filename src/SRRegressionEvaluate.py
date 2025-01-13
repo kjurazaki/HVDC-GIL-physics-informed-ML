@@ -53,6 +53,7 @@ def symbolic_regression(
     model_path=None,
     divide_by_area=False,
     modifier="",
+    folder_path="Folder not defined",
 ):
     """
     Run symbolic regression for dark currents, time to steady state
@@ -63,6 +64,7 @@ def symbolic_regression(
         divide_by_area=divide_by_area,
         remove_outliers=remove_outliers,
         modifier=modifier,
+        folder_path=folder_path,
     )
     if run_symbolic and model_path is None:
         datasets = split_train_val_test(
@@ -144,14 +146,19 @@ def symbolic_regression_surface(interface="up", save_path=None):
 
 
 def symbolic_regression_data(
-    features, var_to_predict, divide_by_area=False, remove_outliers=False, modifier=""
+    features,
+    var_to_predict,
+    divide_by_area=False,
+    remove_outliers=False,
+    modifier="",
+    folder_path="Folder not defined",
 ):
     """
     Symbolic regression for dark currents load and prepare data
     """
     # Load dark_currents
-    df = load_train_data("dark_currents", modifier=modifier)
-    df_es = load_train_data("dark_currents_es_solution")
+    df = load_train_data("dark_currents", modifier=modifier, folder_path=folder_path)
+    df_es = load_train_data("dark_currents_es_solution", folder_path=folder_path)
 
     df_es.drop(columns=["Time_s", "S"], inplace=True)
     df_es = df_es.add_suffix("_es")
@@ -197,11 +204,11 @@ def symbolic_regression_data(
     return df
 
 
-def symbolic_regression_conductivity(save_path):
+def symbolic_regression_conductivity(save_path, folder_path="Folder not defined"):
     """
     Symbolic regression for conductivity
     """
-    df_conductivity = load_train_data("surface_2D_steady_all")
+    df_conductivity = load_train_data("surface_2D_steady_all", folder_path=folder_path)
     # remove where Ez or Er is 0
     df_conductivity = df_conductivity[df_conductivity["Ez"] != 0]
     df_conductivity = df_conductivity[df_conductivity["Er"] != 0]
@@ -245,12 +252,15 @@ def symbolic_regression_conductivity(save_path):
 
 
 def load_and_plot_sr_equations_conductivity(
-    units, load_path: str = None, save_path: str = None
+    units,
+    load_path: str = None,
+    save_path: str = None,
+    folder_path="Folder not defined",
 ):
     """
     Load model pickle and plot equations
     """
-    df = load_train_data("surface_2D_steady_all")
+    df = load_train_data("surface_2D_steady_all", folder_path=folder_path)
     # remove where Ez or Er is 0
     df = df[df["Ez"] != 0]
     df = df[df["Er"] != 0]

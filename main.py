@@ -38,9 +38,6 @@ with open("sr_regression_config.json", "r") as file:
 with open("sindy_config.json", "r") as file:
     sindy_config = json.load(file)
 
-with open("config.json", "r") as file:
-    config = json.load(file)
-
 
 def main():
     parser = argparse.ArgumentParser(description="Run different tasks for the project.")
@@ -59,16 +56,16 @@ def main():
         args.modifier = input("Please enter the modifier for the task (optional): ")
 
     #### DATA ####
-    argparse_datatree(args, config, run_config, run_config_es)
+    argparse_datatree(args, run_config, run_config_es)
 
     #### PLOTS ####
-    argparse_plottree(args, config, run_config, run_config_es)
+    argparse_plottree(args, run_config, run_config_es)
 
     #### SYMBOLIC REGRESSION ####
-    argparse_symbolicRegressiontree(args, config, sr_config, run_config, run_config_es)
+    argparse_symbolicRegressiontree(args, run_config, sr_config, run_config_es)
 
     #### SINDY ####
-    argparse_sindy(args, config, sr_config, sindy_config, run_config, run_config_es)
+    argparse_sindy(args, run_config, sr_config, sindy_config, run_config_es)
 
 
 if __name__ == "__main__":

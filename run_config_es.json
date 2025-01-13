@@ -1,6 +1,7 @@
 {
   "_comment_file": " # Results from the conical insulator",
   "folder_path": "C:/Users/kenji/OneDrive/2024/Research DII006/sindy_conical_ML/database_comsol_ml/",
+  "save_folder_path": "C:/Users/kenji/OneDrive/2024/Research DII006/Articles_written/NOV2024 MDPI",
   "_comment_e_current": "Gas volume",
   "_comment_max_electric_field": "Minimum doesn't make sense as always is 0. Don't need this dataframe as surface_Ez_up_min_max and others are sufficient, dataframes: ['_anode', '_cathode', '_downinterface', '_upinterface']",
   "_comment_HV_Ez": "Not used as it is 0",
